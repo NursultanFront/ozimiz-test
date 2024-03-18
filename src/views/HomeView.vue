@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useNotesStore } from '@/stores/notes'
 import { useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import TheNote from '@/components/notes/TheNote.vue'
@@ -12,6 +13,8 @@ interface IForm {
   author: string
   text: string
 }
+
+const store = useNotesStore()
 
 const validationSchema = object({
   title: string().required('Заголовок обязателен').trim(),
@@ -38,6 +41,12 @@ const [text] = defineField('text')
 const onSubmit = handleSubmit(async (values) => {
   try {
     console.log('Данные формы:', values)
+    const date = new Date()
+    store.addNote({
+      ...values,
+      date
+    })
+    isShowModal.value = false
   } catch (error) {
     console.error('Ошибка валидации:', error)
   } finally {
@@ -48,8 +57,13 @@ const isShowModal = ref(false)
 
 const showModal = () => {
   isShowModal.value = true
-  resetForm()
 }
+
+watch(isShowModal, () => {
+  if (!isShowModal.value) {
+    resetForm()
+  }
+})
 </script>
 
 <template>

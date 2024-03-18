@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 interface INotes {
+  id: string
   title: string
   date: Date
   text: string
@@ -11,9 +12,17 @@ interface INotes {
 export const useNotesStore = defineStore('notes', () => {
   const notes = ref<INotes[]>([])
 
-  function addNote() {}
+  function addNote(note: Omit<INotes, 'id'>) {
+    const noteWithId = {
+      ...note,
+      id: Date.now().toString()
+    }
+    notes.value.push(noteWithId)
+  }
 
-  function deleteNote() {}
+  function deleteNote(id: string) {
+    notes.value = notes.value.filter((note) => note.id !== id)
+  }
 
   function removeAllNotes() {
     notes.value = []
