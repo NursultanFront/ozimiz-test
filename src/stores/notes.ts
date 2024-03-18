@@ -1,7 +1,7 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-interface INotes {
+export interface INotes {
   id: string
   title: string
   date: Date
@@ -11,6 +11,10 @@ interface INotes {
 
 export const useNotesStore = defineStore('notes', () => {
   const notes = ref<INotes[]>([])
+
+  const notesCount = computed(() => {
+    return notes.value.length
+  })
 
   function addNote(note: Omit<INotes, 'id'>) {
     const noteWithId = {
@@ -28,5 +32,5 @@ export const useNotesStore = defineStore('notes', () => {
     notes.value = []
   }
 
-  return { notes, addNote, deleteNote, removeAllNotes }
+  return { notes, notesCount, addNote, deleteNote, removeAllNotes }
 })

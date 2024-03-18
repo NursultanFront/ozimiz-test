@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useNotesStore } from '@/stores/notes'
 import { useForm } from 'vee-validate'
 import { object, string } from 'yup'
@@ -47,6 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
       date
     })
     isShowModal.value = false
+    localStorage.setItem('notes', JSON.stringify(store.notes))
   } catch (error) {
     console.error('Ошибка валидации:', error)
   } finally {
@@ -58,6 +59,14 @@ const isShowModal = ref(false)
 const showModal = () => {
   isShowModal.value = true
 }
+
+onMounted(() => {
+  const storedNotes = localStorage.getItem('notes')
+  if (storedNotes) {
+    const notes = JSON.parse(storedNotes)
+    store.notes = [...notes]
+  }
+})
 
 watch(isShowModal, () => {
   if (!isShowModal.value) {
@@ -71,10 +80,19 @@ watch(isShowModal, () => {
     <div class="main__wrapper">
       <div class="main__header">
         <h1>Ваши заметки</h1>
-        <UiButton @click="showModal">Добавить заметку</UiButton>
+        <div>
+          <UiButton @click="showModal">Добавить заметку</UiButton>
+          <UiButton v-if="store.notesCount > 4" @click="store.removeAllNotes()" variant="danger"
+            >Удалить все заметки</UiButton
+          >
+        </div>
       </div>
 
-      <TheNote />
+      <h2 v-if="!store.notesCount">У вас пока нет заметок</h2>
+
+      <div v-else class="main__list">
+        <TheNote v-for="item in store.notes" :key="item.id" v-bind="item"></TheNote>
+      </div>
     </div>
   </main>
   <UiModal v-model="isShowModal" id="add-notes">
@@ -101,6 +119,12 @@ watch(isShowModal, () => {
   &__header {
     display: flex;
     justify-content: space-between;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
