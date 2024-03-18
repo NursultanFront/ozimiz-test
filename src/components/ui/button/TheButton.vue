@@ -1,5 +1,5 @@
 <template>
-  <button :type="props.type" class="button" :disabled="disabled">
+  <button :type="props.type" class="button" :class="`button_${props.variant}`" :disabled="disabled">
     <slot />
   </button>
 </template>
@@ -7,12 +7,13 @@
 interface IProps {
   type?: HTMLButtonElement['type']
   disabled?: boolean
+  variant?: 'primary' | 'danger'
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   type: 'button',
-  variant: 'primary',
-  size: 'medium'
+  disabled: false,
+  variant: 'primary'
 })
 </script>
 <style lang="scss">
@@ -25,9 +26,12 @@ const props = withDefaults(defineProps<IProps>(), {
   font-size: 18px;
   border-radius: 4px;
   font-weight: 800;
+  cursor: pointer;
+}
+
+.button_primary {
   color: #fff;
   background-color: #4b4848;
-  cursor: pointer;
 
   &:hover {
     opacity: 0.8;
@@ -39,6 +43,24 @@ const props = withDefaults(defineProps<IProps>(), {
 
   &:disabled {
     background-color: #6e6e6e;
+  }
+}
+
+.button_danger {
+  color: white;
+  background-color: rgb(219, 45, 45);
+  font-weight: 600;
+
+  &:hover {
+    background-color: rgb(227, 8, 8);
+  }
+
+  &:active {
+    background-color: rgb(227, 8, 8);
+  }
+
+  &:disabled {
+    background-color: rgb(230, 97, 97);
   }
 }
 </style>
