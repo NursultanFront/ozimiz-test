@@ -32,9 +32,9 @@ const showModal = () => {
   <UiModal v-model="isShowModal" id="notes-info">
     <div class="note-modal">
       <div class="note-modal__header">
-        <h2>Заголовок{{ props.title }}</h2>
-        <div>Автор {{ props.author }}</div>
-        <div>Дата создания {{ props.date }}</div>
+        <h2>Заголовок: {{ props.title }}</h2>
+        <div>Автор: {{ props.author }}</div>
+        <div>Дата создания: {{ props.date }}</div>
       </div>
 
       <div class="note-modal__text">
