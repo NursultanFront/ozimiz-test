@@ -5,6 +5,7 @@ interface INotes {
   title: string
   date: Date
   text: string
+  author: string
 }
 
 export const useNotesStore = defineStore('notes', () => {

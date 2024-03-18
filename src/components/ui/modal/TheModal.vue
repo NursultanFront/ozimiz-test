@@ -5,9 +5,9 @@
       ref="modalElementRef"
       class="modal"
       @keydown.esc="onCloseViaEsc"
-      @click="close"
+      @click.prevent="close"
     >
-      <div v-if="isVisible" class="modal-layout">
+      <div v-if="isVisible" class="modal-layout" @click.stop>
         <div class="modal-content">
           <slot :close="close" />
         </div>
